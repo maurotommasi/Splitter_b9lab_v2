@@ -32,7 +32,7 @@ contract Splitter is Stoppable, Safety {
         return true;
     }
 
-    function withdrawRefund() external ReentranceCallDetection returns(bool){ 
+    function withdrawRefund() external returns(bool){ 
 
         uint amountToRefund = balances[msg.sender];
 
