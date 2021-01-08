@@ -13,15 +13,17 @@ contract("Splitter", accounts => {
     before("Should Set Accounts", async () => {
         assert.isAtLeast(accounts.length, 4, 'There should be at least 4 accounts to do this test');
         [owner, sender, beneficiary1, beneficiary2] = accounts
-        if(SHOWLOG) console.log("----------------------------------------");
-        if(SHOWLOG) console.log("sender Address: " + sender);
-        if(SHOWLOG) console.log("Beneficiary1 Address: " + beneficiary1);
-        if(SHOWLOG) console.log("Beneficiary2 Address: " + beneficiary2);
-        if(SHOWLOG) console.log("Amount to be splitted: " + AMOUNT);
+        if(SHOWLOG) {
+            console.log("----------------------------------------");
+            console.log("sender Address: " + sender);
+            console.log("Beneficiary1 Address: " + beneficiary1);
+            console.log("Beneficiary2 Address: " + beneficiary2);
+            console.log("Amount to be splitted: " + AMOUNT);
+        }
     });
 
     beforeEach("New Istance of Splitter Test", async () => {
-        splitter = await Splitter.new();
+        splitter = await Splitter.new({from : owner});
     });
 
     function matchError(solidityExpectedError, e, showData = false){
@@ -97,15 +99,29 @@ contract("Splitter", accounts => {
             // Should split some amount before to be able to withdraw something
             
             await splitter.split(beneficiary1, beneficiary2, {from : sender, value : AMOUNT});
-
-            console.log("Beneficiary 1 Web3 Balance Before: ", await web3.eth.getBalance(beneficiary1));
-
+            const Web3_beneficiary1_balance_before = await web3.eth.getBalance(beneficiary1);
+            
             const txObj = await splitter.withdrawRefund({from : beneficiary1});
+
+            txReceipt = await web3.eth.getTransactionReceipt(txObj.receipt.transactionHash);
+            //console.log(txObj);
+            const gasPrice = await web3.eth.getGasPrice();
+            const gasCost = gasPrice * txReceipt.gasUsed;
+
+            const Web3_beneficiary1_balance_after = await web3.eth.getBalance(beneficiary1);
 
             assert.strictEqual(txObj.logs[0].args.who.toString(10), beneficiary1.toString(10), "Withdrawer Dismach");
 
-            console.log("Beneficiary 1 Web3 Balance After: ", await web3.eth.getBalance(beneficiary1));
+            const withdrawedAmount = txObj.logs[0].args.amount;
 
+            assert(Web3_beneficiary1_balance_after - Web3_beneficiary1_balance_before + gasCost == withdrawedAmount, "Wei dismatch");
+            
+            if(SHOWLOG){
+                console.log("Beneficiary 1 Web3 Balance Before: ", Web3_beneficiary1_balance_before);
+                console.log("Beneficiary 1 Web3 Balance After: ", Web3_beneficiary1_balance_after);
+                console.log("Withdraw cost: ", gasCost);
+            }
+            
         });
 
     });
