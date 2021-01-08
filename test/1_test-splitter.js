@@ -75,7 +75,7 @@ contract("Splitter", accounts => {
 
         });
 
-        it("#006 - Split", async function() {
+        it("#005 - Split", async function() {
 
             assert(beneficiary1 != beneficiary2);
             assert(AMOUNT.toString(10) != web3.utils.toBN(0).toString(10));
@@ -92,7 +92,7 @@ contract("Splitter", accounts => {
 
 
         
-        it("#007 - Withdraw Balance", async function() {
+        it("#006 - Withdraw Balance", async function() {
             
             // Should split some amount before to be able to withdraw something
             
