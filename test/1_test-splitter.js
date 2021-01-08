@@ -112,7 +112,7 @@ contract("Splitter", accounts => {
 
             assert.strictEqual(txObj.logs[0].args.who.toString(10), beneficiary1.toString(10), "Withdrawer Dismach");
 
-            const withdrawedAmount = parseInt(txObj.logs[0].args.amount);
+            const withdrawedAmount = txObj.logs[0].args.amount;
             
             assert.strictEqual(parseInt(Web3_beneficiary1_balance_after) + parseInt(gasCost), parseInt(Web3_beneficiary1_balance_before) + parseInt(withdrawedAmount), "Wei dismatch");
 
