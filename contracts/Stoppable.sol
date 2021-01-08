@@ -8,7 +8,7 @@ contract Stoppable is Owned {
 
     bool internal running;
     
-    event LogRunSwitch(address sender, bool switchSetting);
+    event RunSwitchLog(address sender, bool switchSetting);
 
     modifier onlyIfRunning {
         require(running, "Stoppable.onlyIfRunning#001 : It's not running");
@@ -22,7 +22,7 @@ contract Stoppable is Owned {
     function runSwitch() public onlyOwner returns(bool){
         bool actualRunning = running;
         running = !actualRunning;
-        LogRunSwitch(msg.sender, !actualRunning);
+        RunSwitchLog(msg.sender, !actualRunning);
         return true;
     }
 
