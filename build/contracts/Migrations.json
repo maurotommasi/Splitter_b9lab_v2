@@ -894,7 +894,7 @@
     "version": "0.6.10+commit.00c0fcaf.Emscripten.clang"
   },
   "networks": {
-    "1608561671861": {
+    "*": {
       "events": {},
       "links": {},
       "address": "0x1b102Fbe0fA244aCD5a8431dc93FE5b1a7dfC79d",
