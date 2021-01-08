@@ -20,10 +20,10 @@ contract Splitter is Stoppable, Safety {
         require(_first != _second, "Splitter.split#002 : Beneficiaries can't have the same value");
         require(msg.value != uint(0), "Splitter.split#003 : Value can't be 0");
 
-        uint unsplittableValue = msg.value.mod(uint(2)); // See Analysis.sol to know why it should less expansive to use % 2
+        uint unsplittableValue = msg.value.mod(uint(2)); 
 
-        balances[_first] = balances[_first].add(msg.value.div(uint(2))); //See Analysis.sol to know why it should less expansive to use / 2
-        balances[_second] = balances[_second].add(msg.value.div(uint(2))); //See Analysis.sol to know why it should less expansive to use / 2
+        balances[_first] = balances[_first].add(msg.value.div(uint(2))); 
+        balances[_second] = balances[_second].add(msg.value.div(uint(2))); 
 
         if(unsplittableValue != 0) balances[msg.sender].add(unsplittableValue);
 
