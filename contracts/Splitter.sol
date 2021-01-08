@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 import "./SafeMath.sol";
 import "./Stoppable.sol";
-import "./Safety.sol";
 
 pragma solidity 0.6.10;
 
-contract Splitter is Stoppable, Safety {
+contract Splitter is Stoppable {
 
     using SafeMath for uint;
 
