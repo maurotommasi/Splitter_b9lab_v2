@@ -77,7 +77,9 @@ contract("Splitter", accounts => {
 
         });
 
-        it("#005 - Split", async function() {
+        it("#005 - Split Pair Value", async function() {
+
+            const sender_Balance_before = await splitter.balances.call(sender);
 
             assert(beneficiary1 != beneficiary2);
             assert(AMOUNT.toString(10) != web3.utils.toBN(0).toString(10));
@@ -89,6 +91,35 @@ contract("Splitter", accounts => {
             assert.strictEqual(web3.utils.toBN(txObj.logs[0].args.amount).toString(10), AMOUNT.toString(10), "Amount Dismach");
             assert.strictEqual(txObj.logs[0].args.first.toString(10), beneficiary1.toString(10), "Beneficiary1 Dismach");
             assert.strictEqual(txObj.logs[0].args.second.toString(10), beneficiary2.toString(10), "Beneficiary2 Dismach");
+
+            const sender_Balance_after= await splitter.balances.call(sender);
+
+            const unsplittableValue = 0;
+
+            assert.strictEqual(sender_Balance_before.toString(10), sender_Balance_after.toString(10))
+
+        });
+
+        it("#005 - Split Odd Value", async function() {
+
+            const ODD_AMOUNT = AMOUNT + 1;
+
+            const sender_Balance_before = await splitter.balances.call(sender);
+
+            assert(beneficiary1 != beneficiary2);
+            assert(AMOUNT.toString(10) != web3.utils.toBN(0).toString(10));
+            assert(sender != beneficiary1 && sender != beneficiary2);
+
+            const txObj = await splitter.split(beneficiary1, beneficiary2, {from : sender, value : ODD_AMOUNT});
+
+            assert.strictEqual(txObj.logs[0].args.sender.toString(10), sender.toString(10), "Sender Dismach");
+            assert.strictEqual(web3.utils.toBN(txObj.logs[0].args.amount).toString(10), ODD_AMOUNT.toString(10), "Amount Dismach");
+            assert.strictEqual(txObj.logs[0].args.first.toString(10), beneficiary1.toString(10), "Beneficiary1 Dismach");
+            assert.strictEqual(txObj.logs[0].args.second.toString(10), beneficiary2.toString(10), "Beneficiary2 Dismach");
+
+            const sender_Balance_after = await splitter.balances.call(sender);
+
+            assert.strictEqual(sender_Balance_after - sender_Balance_before, 1);
 
         });
 

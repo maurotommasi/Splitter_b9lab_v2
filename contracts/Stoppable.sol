@@ -6,7 +6,7 @@ pragma solidity 0.6.10;
 
 contract Stoppable is Owned {
 
-    bool internal isRunning;
+    bool private isRunning;
 
     event RunSwitchLog(address owner, bool switchSetting);
 
@@ -15,14 +15,18 @@ contract Stoppable is Owned {
         _;
     }
 
-    constructor () public {
-        isRunning = true;
+    constructor (bool _isRunning) public {
+        isRunning = _isRunning;
     }
-    
+
+    function getIsRunning() public view returns(bool){
+        return isRunning;
+    } 
+
     function runSwitch() public onlyOwner returns(bool){
-        bool actualRunning = isRunning;
-        isRunning = !actualRunning;
-        RunSwitchLog(msg.sender, !actualRunning);
+        bool newRunning = !isRunning;
+        isRunning = newRunning;
+        RunSwitchLog(msg.sender, newRunning);
         return true;
     }
 
