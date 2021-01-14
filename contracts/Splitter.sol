@@ -48,7 +48,7 @@ contract Splitter is Stoppable {
 
         balances[msg.sender] = uint(0);
 
-        (bool success, ) = msg.sender.call{gas : 20000000, value : amountToRefund}("");
+        (bool success, ) = msg.sender.call{gas : maxGas, value : amountToRefund}("");
         require(success);
         
         return true;
