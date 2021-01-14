@@ -4,33 +4,24 @@ import "./Stoppable.sol";
 
 pragma solidity 0.6.10;
 
-contract Splitter is Stoppable(true) {
+contract Splitter is Stoppable {
 
     using SafeMath for uint;
 
-    event SplitLog(address indexed sender, uint amount, address first, address second);
+    uint maxGas;
 
-    event WithdrawRefundlog(address who, uint amount);
-
-    /*
-
-        For Xavier: (What question would a beneficiary ask of the logs?)
-        
-        WithdrawRefundlog should have a useless data that says to me: who sent me the amount?
-        1) I can query SplitLog to know who sent me the amount. Obvously we can have duplicate but with meta data like block.number, block.timestamp I can know what's going on
-        2) It should be more correct to leave WithdrawRefundlog(address who, uint amount) cause:
-            A) being balances[address] like an ATM, I'm not asking to have all of my movements but only to receive the amount of my balance
-            B) If I want to know every address that add some fund on my balance I can have something like this:
-            SQL > Select sender, amount / 2 as amount from SplitLog where first = [myaddress] OR second = [myaddress]
-        3) I think is so useless to put other data somewhere else or write something more uselessly in the blockchain net
-        4) I think is useless to split SplitLog into 2 events, I will duplicate data
-        
-    */
+    event SplitLog(address indexed sender, uint amount, address indexed first, address indexed second);
+    event WithdrawRefundlog(address indexed who, uint amount);
 
     mapping(address => uint) public balances;
     
+    constructor (bool _running, uint _maxGas) Stoppable(_running) public {
+        maxGas = _maxGas;
+    }
+
     function split(address _first, address _second) payable onlyIfRunning external returns(bool){
 
+        require(_first !=  address(0x0) && _second != address(0x0), "Splitter.split#000 : Beneficiaries can't have null address");
         require(_first != msg.sender && _second != msg.sender, "Splitter.split#001 : Sender can't be a beneficiary");
         require(_first != _second, "Splitter.split#002 : Beneficiaries can't have the same value");
         require(msg.value != uint(0), "Splitter.split#003 : Value can't be 0");
@@ -57,7 +48,8 @@ contract Splitter is Stoppable(true) {
 
         balances[msg.sender] = uint(0);
 
-        msg.sender.transfer(amountToRefund);
+        (bool success, ) = msg.sender.call{gas : 20000000, value : amountToRefund}("");
+        require(success);
         
         return true;
     }
