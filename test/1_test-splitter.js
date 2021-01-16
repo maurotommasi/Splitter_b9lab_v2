@@ -79,10 +79,10 @@ contract("Splitter", accounts => {
 
             const txObj = await splitter.split(beneficiary1, beneficiary2, {from : sender, value : EVEN_AMOUNT});
 
-            assert.strictEqual(txObj.logs[0].args.sender.toString(10), sender.toString(10), "Sender Dismach");
+            assert.strictEqual(txObj.logs[0].args.sender, sender, "Sender Dismach");
             assert.strictEqual(toBN(txObj.logs[0].args.amount).toString(10), EVEN_AMOUNT.toString(10), "Amount Dismach");
-            assert.strictEqual(txObj.logs[0].args.first.toString(10), beneficiary1.toString(10), "Beneficiary1 Dismach");
-            assert.strictEqual(txObj.logs[0].args.second.toString(10), beneficiary2.toString(10), "Beneficiary2 Dismach");
+            assert.strictEqual(txObj.logs[0].args.first, beneficiary1, "Beneficiary1 Dismach");
+            assert.strictEqual(txObj.logs[0].args.second, beneficiary2.toString(10), "Beneficiary2 Dismach");
 
             assert.strictEqual((await splitter.balances.call(sender)).toString(10),  "0")
             assert.strictEqual((await splitter.balances.call(beneficiary1)).toString(10), toBN(EVEN_AMOUNT / 2).toString(10));
@@ -96,10 +96,10 @@ contract("Splitter", accounts => {
             const splittableValue = ODD_AMOUNT - unplittableValue;
             const txObj = await splitter.split(beneficiary1, beneficiary2, {from : sender, value : ODD_AMOUNT});
 
-            assert.strictEqual(txObj.logs[0].args.sender.toString(10), sender.toString(10), "Sender Dismach");
+            assert.strictEqual(txObj.logs[0].args.sender, sender, "Sender Dismach");
             assert.strictEqual(txObj.logs[0].args.amount.toString(10), ODD_AMOUNT.toString(10), "Amount Dismach");
-            assert.strictEqual(txObj.logs[0].args.first.toString(10), beneficiary1.toString(10), "Beneficiary1 Dismach");
-            assert.strictEqual(txObj.logs[0].args.second.toString(10), beneficiary2.toString(10), "Beneficiary2 Dismach");
+            assert.strictEqual(txObj.logs[0].args.first, beneficiary1, "Beneficiary1 Dismach");
+            assert.strictEqual(txObj.logs[0].args.second, beneficiary2.toString(10), "Beneficiary2 Dismach");
 
             assert.strictEqual((await splitter.balances.call(sender)).toString(10), toBN(unplittableValue).toString(10))
             assert.strictEqual((await splitter.balances.call(beneficiary1)).toString(10), (splittableValue/ 2).toString(10));
@@ -124,7 +124,7 @@ contract("Splitter", accounts => {
 
             const Web3_beneficiary1_balance_after = await web3.eth.getBalance(beneficiary1);
 
-            assert.strictEqual(txObj.logs[0].args.who.toString(10), beneficiary1.toString(10), "Withdrawer Dismach");
+            assert.strictEqual(txObj.logs[0].args.who.toString(10), beneficiary1, "Withdrawer Dismach");
 
             const withdrawedAmount = txObj.logs[0].args.amount;
             
