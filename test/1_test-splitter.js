@@ -31,10 +31,10 @@ contract("Splitter", accounts => {
         })
 
         it("Balances of actors have to be 0 wei", async function () {
-            assert.strictEqual((await splitter.balances.call(sender)).toString(10), toBN("0").toString(10));
+            assert.strictEqual((await splitter.balances.call(sender)).toString(10), "0");
             //assert.strictEqual(await splitter.balances.call(sender), 0);       //AssertionError: expected <BN: 0> to equal 0
-            assert.strictEqual((await splitter.balances.call(beneficiary1)).toString(10), toBN("0").toString(10)); 
-            assert.strictEqual((await splitter.balances.call(beneficiary2)).toString(10), toBN("0").toString(10)); 
+            assert.strictEqual((await splitter.balances.call(beneficiary1)).toString(10), "0"); 
+            assert.strictEqual((await splitter.balances.call(beneficiary2)).toString(10), "0"); 
         })
     })
     describe("#SingleUnitTest", function() {
@@ -64,7 +64,7 @@ contract("Splitter", accounts => {
 
         it("#004 - Amount to refund can't be 0", async function() {
             const beneficiary1_balance = await splitter.balances.call(beneficiary1);
-            assert.strictEqual(beneficiary1_balance.toString(10), toBN(0).toString(10));
+            assert.strictEqual(beneficiary1_balance.toString(10),  "0");
             try {
                 assert(await splitter.withdrawRefund({from : beneficiary1}));
             } catch(e) {
@@ -74,7 +74,7 @@ contract("Splitter", accounts => {
 
         it("#005 - Split Pair Value", async function() {
             assert(beneficiary1 != beneficiary2);
-            assert(EVEN_AMOUNT.toString(10) != toBN(0).toString(10));
+            assert(EVEN_AMOUNT.toString(10) !=  "0");
             assert(sender != beneficiary1 && sender != beneficiary2);
 
             const txObj = await splitter.split(beneficiary1, beneficiary2, {from : sender, value : EVEN_AMOUNT});
@@ -84,7 +84,7 @@ contract("Splitter", accounts => {
             assert.strictEqual(txObj.logs[0].args.first.toString(10), beneficiary1.toString(10), "Beneficiary1 Dismach");
             assert.strictEqual(txObj.logs[0].args.second.toString(10), beneficiary2.toString(10), "Beneficiary2 Dismach");
 
-            assert.strictEqual((await splitter.balances.call(sender)).toString(10), toBN(0).toString(10))
+            assert.strictEqual((await splitter.balances.call(sender)).toString(10),  "0")
             assert.strictEqual((await splitter.balances.call(beneficiary1)).toString(10), toBN(EVEN_AMOUNT / 2).toString(10));
             assert.strictEqual((await splitter.balances.call(beneficiary2)).toString(10), toBN(EVEN_AMOUNT / 2).toString(10));
 
