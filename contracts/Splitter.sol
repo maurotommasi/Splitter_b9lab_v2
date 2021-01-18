@@ -8,7 +8,7 @@ contract Splitter is Stoppable {
 
     using SafeMath for uint;
 
-    uint maxGas;
+    uint public maxGas;
 
     event SplitLog(address indexed sender, uint amount, address indexed first, address indexed second);
     event WithdrawRefundlog(address indexed who, uint amount);
