@@ -12,6 +12,7 @@ contract Splitter is Stoppable {
 
     event SplitLog(address indexed sender, uint amount, address indexed first, address indexed second);
     event WithdrawRefundlog(address indexed who, uint amount);
+    event MaxGasLog(address indexed owner, uint maxGas);
 
     mapping(address => uint) public balances;
     
@@ -38,7 +39,7 @@ contract Splitter is Stoppable {
         return true;
     }
 
-    function withdrawRefund() external returns(bool){ 
+    function withdrawRefund() external returns(bool success){ 
 
         uint amountToRefund = balances[msg.sender];
 
@@ -48,14 +49,19 @@ contract Splitter is Stoppable {
 
         balances[msg.sender] = uint(0);
 
-        (bool success, ) = msg.sender.call{gas : maxGas, value : amountToRefund}("");
+        (success, ) = msg.sender.call{gas : maxGas, value : amountToRefund}("");
         require(success);
-        
-        return true;
     }
 
     fallback() external {
         revert();
+    }
+
+    function changeMaxGas(uint _maxGas) public onlyOwner returns(bool){
+        uint currectmaxGas = maxGas;
+        require(currectmaxGas != _maxGas, "Can't have the same gas");
+        maxGas = _maxGas;
+        emit MaxGasLog(msg.sender, _maxGas);
     }
 
 }

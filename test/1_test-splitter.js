@@ -2,11 +2,11 @@ const Splitter = artifacts.require("./Splitter.sol");
 
 contract("Splitter", accounts => {
 
-    const { toBN } = web3.utils;
+    const { toBN, toWei } = web3.utils;
     const RUNNING = true;
     const MAXGAS = 20000000;
-    const EVEN_AMOUNT = toBN(web3.utils.toWei('1', 'gwei'));
-    const ODD_AMOUNT = toBN(web3.utils.toWei('1', 'gwei') + 1);
+    const EVEN_AMOUNT = toBN(toWei('1', 'gwei'));
+    const ODD_AMOUNT = toBN(toWei('1', 'gwei') + 1);
     let owner, sender, beneficiary1, beneficiary2;
 
     let splitter;
@@ -22,17 +22,13 @@ contract("Splitter", accounts => {
 
     describe("Data", function() {
         it("Beneficiaries can't have the same address", () => {
-            assert(beneficiary1 != beneficiary2);
-            assert(sender != beneficiary1 && sender != beneficiary2);
-        })
-
-        it("Sender can't have the same address of beneficiaries", () => {
-            assert(sender != beneficiary1 && sender != beneficiary2);
+            assert.notStrictEqual(beneficiary1, beneficiary2, "Beneficiaries can't have the same address");
+            assert.notStrictEqual(sender, beneficiary1, "sender can't have the same address of Beneficiary 1");
+            assert.notStrictEqual(sender, beneficiary2, "sender can't have the same address of Beneficiary 2");
         })
 
         it("Balances of actors have to be 0 wei", async function () {
             assert.strictEqual((await splitter.balances.call(sender)).toString(10), "0");
-            //assert.strictEqual(await splitter.balances.call(sender), 0);       //AssertionError: expected <BN: 0> to equal 0
             assert.strictEqual((await splitter.balances.call(beneficiary1)).toString(10), "0"); 
             assert.strictEqual((await splitter.balances.call(beneficiary2)).toString(10), "0"); 
         })
@@ -101,7 +97,7 @@ contract("Splitter", accounts => {
             assert.strictEqual(txObj.logs[0].args.first, beneficiary1, "Beneficiary1 Dismach");
             assert.strictEqual(txObj.logs[0].args.second, beneficiary2.toString(10), "Beneficiary2 Dismach");
 
-            assert.strictEqual((await splitter.balances.call(sender)).toString(10), toBN(unplittableValue).toString(10))
+            assert.strictEqual((await splitter.balances.call(sender)).toString(10), "1");
             assert.strictEqual((await splitter.balances.call(beneficiary1)).toString(10), (splittableValue/ 2).toString(10));
             assert.strictEqual((await splitter.balances.call(beneficiary2)).toString(10), (splittableValue/ 2).toString(10));
 
@@ -117,10 +113,11 @@ contract("Splitter", accounts => {
             
             const txObj = await splitter.withdrawRefund({from : beneficiary1});
 
-            txReceipt = await web3.eth.getTransactionReceipt(txObj.receipt.transactionHash);
-
-            const gasPrice = await web3.eth.getGasPrice();
-            const gasCost = gasPrice * txReceipt.gasUsed;
+            const tx = await web3.eth.getTransaction(txObj.tx);
+            const txReceipt = txObj.receipt;
+            const gasPrice = tx.gasPrice;
+            const GasUsed = txReceipt.gasUsed;
+            const gasCost = toBN(gasPrice * GasUsed);
 
             const Web3_beneficiary1_balance_after = await web3.eth.getBalance(beneficiary1);
 
@@ -128,7 +125,7 @@ contract("Splitter", accounts => {
 
             const withdrawedAmount = txObj.logs[0].args.amount;
             
-            assert.strictEqual(parseInt(Web3_beneficiary1_balance_after) + parseInt(gasCost), parseInt(Web3_beneficiary1_balance_before) + parseInt(withdrawedAmount), "Wei dismatch");
+            assert.strictEqual(Web3_beneficiary1_balance_after.add(gasCost).toString(10), Web3_beneficiary1_balance_before).add(withdrawedAmount).toString(10), "Wei dismatch");
 
         });
 

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+    <head>
+        <title>My Splittle contract</title>
+        <script src="app.js"></script>
+    </head>
+    <body>
+        <div>You have <span id="balance">Loading...</span> ETH</div>
+        <form>
+            Amount: <input name="amount" type="number" id="amount" placeholder="1000000000000000000" /> <br>
+            Beneficiary 1: <input name="beneficiary1" type="text" id="beneficiary1" placeholder="0x1234567890123456789012345678901234567890" /><br>
+            Beneficiary 2: <input name="beneficiary2" type="text" id="beneficiary2" placeholder="0x1234567890123456789012345678901234567890" /><br>
+            <br>
+            <div>
+                <button onclick="addFund()">1: Add Fund</button><br>
+                <button onclick="split(beneficiary1, beneficiary2)">2: Split</button><br>
+                <button onclick="withdrawRefund(beneficiary1)">3: Withdraw<z/button><br>
+            </div>
+        </form>
+        <br>
+    </body>
+</html>
