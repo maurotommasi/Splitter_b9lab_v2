@@ -1,5 +1,6 @@
 const Splitter = artifacts.require("./Splitter.sol");
 const truffleAssert = require("truffle-assertions");
+
 contract("Splitter", accounts => {
 
     const { toBN, toWei } = web3.utils;
@@ -59,8 +60,8 @@ contract("Splitter", accounts => {
         });
 
         it("#004 - Amount to refund can't be 0", async function() {
-            const beneficiary1_balance = await splitter.balances.call(beneficiary1);
-            assert.strictEqual(beneficiary1_balance.toString(10),  "0");
+            const beneficiary1Balance = await splitter.balances.call(beneficiary1);
+            assert.strictEqual(beneficiary1Balance.toString(10),  "0");
             try {
                 assert(await splitter.withdrawRefund({from : beneficiary1}));
             } catch(e) {
@@ -107,7 +108,7 @@ contract("Splitter", accounts => {
             // Should split some amount before to be able to withdraw something
             
             await splitter.split(beneficiary1, beneficiary2, {from : sender, value :EVEN_AMOUNT});
-            const Web3Beneficiary1BalanceBefore = await web3.eth.getBalance(beneficiary1);
+            const web3Beneficiary1BalanceBefore = await web3.eth.getBalance(beneficiary1);
             
             const txObj = await splitter.withdrawRefund({from : beneficiary1});
 
@@ -117,12 +118,12 @@ contract("Splitter", accounts => {
             const gasUsed = txReceipt.gasUsed;
             const gasCost = toBN(gasPrice).mul(toBN(gasUsed));
 
-            const Web3Beneficiary1BalanceAfter = await web3.eth.getBalance(beneficiary1);
+            const web3Beneficiary1BalanceAfter = await web3.eth.getBalance(beneficiary1);
 
             assert.strictEqual(txObj.logs[0].args.who.toString(10), beneficiary1, "Withdrawer Dismach");
 
             const withdrawedAmount = toBN(txObj.logs[0].args.amount);
-            assert.strictEqual(toBN(Web3Beneficiary1BalanceAfter).sub(toBN(Web3Beneficiary1BalanceBefore)).toString(10), toBN((withdrawedAmount)).sub(toBN(gasCost)).toString(10), "Wei dismatch");
+            assert.strictEqual(toBN(web3Beneficiary1BalanceAfter).sub(toBN(web3Beneficiary1BalanceBefore)).toString(10), toBN((withdrawedAmount)).sub(toBN(gasCost)).toString(10), "Wei dismatch");
 
         });
 
