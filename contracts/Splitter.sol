@@ -61,7 +61,7 @@ contract Splitter is Stoppable {
         uint currectmaxGas = maxGas;
         require(currectmaxGas != _maxGas, "Can't have the same gas");
         maxGas = _maxGas;
-        emit MaxGasLog(msg.sender, _maxGas);
+        emit MaxGasChangedLog(msg.sender, _maxGas);
     }
 
 }
