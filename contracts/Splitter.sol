@@ -12,7 +12,7 @@ contract Splitter is Stoppable {
 
     event SplitLog(address indexed sender, uint amount, address indexed first, address indexed second);
     event WithdrawRefundlog(address indexed who, uint amount);
-    event MaxGasLog(address indexed owner, uint maxGas);
+    event MaxGasChangedLog(address indexed owner, uint maxGas);
 
     mapping(address => uint) public balances;
     

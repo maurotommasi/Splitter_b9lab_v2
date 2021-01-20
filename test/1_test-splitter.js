@@ -109,23 +109,23 @@ contract("Splitter", accounts => {
             // Should split some amount before to be able to withdraw something
             
             await splitter.split(beneficiary1, beneficiary2, {from : sender, value :EVEN_AMOUNT});
-            const Web3_beneficiary1_balance_before = await web3.eth.getBalance(beneficiary1);
+            const Web3Beneficiary1BalanceBefore = await web3.eth.getBalance(beneficiary1);
             
             const txObj = await splitter.withdrawRefund({from : beneficiary1});
 
             const tx = await web3.eth.getTransaction(txObj.tx);
             const txReceipt = txObj.receipt;
             const gasPrice = tx.gasPrice;
-            const GasUsed = txReceipt.gasUsed;
-            const gasCost = toBN(gasPrice * GasUsed);
+            const gasUsed = txReceipt.gasUsed;
+            const gasCost = toBN(gasPrice * gasUsed);
 
-            const Web3_beneficiary1_balance_after = await web3.eth.getBalance(beneficiary1);
+            const Web3Beneficiary1BalanceAfter = await web3.eth.getBalance(beneficiary1);
 
             assert.strictEqual(txObj.logs[0].args.who.toString(10), beneficiary1, "Withdrawer Dismach");
 
             const withdrawedAmount = txObj.logs[0].args.amount;
             
-            assert.strictEqual((Web3_beneficiary1_balance_after-Web3_beneficiary1_balance_before).toString(10), (withdrawedAmount-gasCost).toString(10), "Wei dismatch");
+            assert.strictEqual((Web3Beneficiary1BalanceAfter-Web3Beneficiary1BalanceBefore).toString(10), (withdrawedAmount-gasCost).toString(10), "Wei dismatch");
 
         });
 
