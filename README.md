@@ -4,11 +4,12 @@ Supports the [Status EIP-1102 Tutorial](http://www.status.im/developer_tools/run
 
 Showcases how to access an injected Ethereum provider, in this case the EIP-1102-compliant `window.ethereum`, alongside the legacy `window.web3`.
 
-The GUI displays:
+The GUI displays (tested on hanache-cli):
 
-* whether you are connected to Ethereum
-* the balances of your accounts, only if you have expressely allowed it, and if you have any
-* the balance of any address you paste in the input box
+* Three textbox (sender, beneficiary1, beneficiary2) and a button Split
+* A textbox (address) and 2 buttons: Withdraw and Show Web3 Balance
+* Some useful data that shows the balances of the actors
+* The balance on Web3 of a specific address
 
 After cloning it, to run this program, you need to:
 
@@ -16,4 +17,9 @@ After cloning it, to run this program, you need to:
 $ npm install
 $ npm run dev
 ```
+
+In another terminal run:
+
+ganache-cli --host 0.0.0.0
+
 Then open [http://127.0.0.1:8080](http://127.0.0.1:8080) in your preferred browser.
