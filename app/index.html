@@ -1,44 +1,28 @@
-<!doctype html>
-<html lang="en" dir="ltr">
-<head>
-    <title>Ether Balances</title>
-    <meta charset="utf-8">
-    <style type="text/css">
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Ether balances</h1>
-
-    <table spacing="0">
-        <thead>
-            <tr>
-                <th>Address</th>
-                <th>Balance</th>
-            </tr>
-        </thead>
-
-        <tbody id="myAddresses">
-            <tr>
-                <td><button id="allowMyAddresses">Allow my addresses</button></td>
-                <td id="allowStatus"></td>
-            </tr>
-        </tbody>
-
-        <tbody>
-            <tr>
-                <td><input type="text" id="otherAddress"></td>
-                <td id="otherBalance"></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <span id="connected">Setting up Ethereum</span>
-
-    <script src="app.js"></script>
-</body>
+<html>
+    <head>
+        <title id='title'></title>
+    </head>
+    <body>
+        <h1 id="appName"></h1>
+            <input type="text" placeholder="address" id="address"></input>
+            <input type="text" placeholder="beneficiary1" id="beneficiary1"></input>
+            <input type="text" placeholder="beneficiary2" id="beneficiary2"></input>
+            <input type="text" placeholder="value" id="value"></input>
+            <input type="button" value="Split" id="btnSplit">
+            <br>
+            <input type="text" placeholder="addressToWithdraw" id="addressToWithdraw"></input>
+            <input type="button" value="withdraw" id="btnWithdraw">
+            <input type="button" value="Show Web3 Balance" id="btnShowBalance">
+        <h2>Balances on Contract</h2>
+        <div>
+            <p id="addressBalance"></p><br>
+            <p id="beneficiary1Balance"></p><br>
+            <p id="beneficiary2Balance"></p><br>
+        </div>
+        <h2>Balances on Web3</h2>
+        <div>
+            <p id="addressWeb3Balance"></p><br>
+        </div>
+        <script src="./app.js"></script>
+    </body>
 </html>
