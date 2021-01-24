@@ -4,7 +4,7 @@ Supports the [Status EIP-1102 Tutorial](http://www.status.im/developer_tools/run
 
 Showcases how to access an injected Ethereum provider, in this case the EIP-1102-compliant `window.ethereum`, alongside the legacy `window.web3`.
 
-The GUI displays (tested on hanache-cli):
+The GUI displays (tested on ganache-cli):
 
 * Three textbox (sender, beneficiary1, beneficiary2) and a button Split
 * A textbox (address) and 2 buttons: Withdraw and Show Web3 Balance
