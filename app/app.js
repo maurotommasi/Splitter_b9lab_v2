@@ -57,10 +57,21 @@ async function init() {
     
 };
 
+// -------------------------------------------------------------------------------------------- JS CONTRACT FUNCTIONS
+
 async function getOwner(){
     try {
         const splitterOwner = await Splitter.methods.getOwner().call({from: account});
         return splitterOwner;
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+async function changeOwner(newOwner){
+    try {
+        const changeOwner = await Splitter.methods.changeOwner(newOwner).call({from: account});
+        return changeOwner;
     } catch(e) {
         console.error(e);
     }
@@ -158,13 +169,17 @@ async function withdraw(){
     }
 }
 
-// -------------------------------------------------------------------------------------------- FUNCTION LOADER
+// -------------------------------------------------------------------------------------------- ACTIONS LOADER
 
 function loadFunctions(){
     runSplit();
     runWithdraw();
     showWeb3Balance();
+    runSwitchContractState();
+    runChangeOwner();
 }
+
+// -------------------------------------------------------------------------------------------- JS ACTIONS 
 
 function runSplit(){
     $(document).ready(function(){
@@ -207,6 +222,31 @@ function showWeb3Balance(){
         })
     })
 }
+
+function runSwitchContractState(){
+    $(document).ready(function(){
+        $('#btnSwitchState').click(async function(){
+            //account = SplitterAppData.owner; //for test
+            await switchContractState();
+            SplitterAppData.isRunning = await getIsRunning();
+            console.log(SplitterAppData);
+        })
+    })
+}
+
+function runChangeOwner(){
+    $(document).ready(function(){
+        $('#btnChangeOwner').click(async function(){
+            account = SplitterAppData.owner;
+            const addressBeneficiary1 = document.getElementById("beneficiary1").value;
+            await changeOwner(addressBeneficiary1);
+            SplitterAppData.owner = await getOwner();
+            console.log(SplitterAppData);
+        })
+    })
+}
+
+// -------------------------------------------------------------------------------------------- MAIN EVENT
 
 window.addEventListener('load', async function() {
     init();
